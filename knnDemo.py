@@ -1,30 +1,21 @@
-import pandas as pd
-from mlxtend.preprocessing import TransactionEncoder
-from mlxtend.frequent_patterns import apriori, association_rules
+import matplotlib.pyplot as plt
+from sklearn.neighbors import KNeighborsClassifier
 
+x = [4, 5, 10, 4, 3, 11, 14, 8, 10, 12]
+y = [21, 19, 24, 17, 16, 25, 24, 22, 21, 21]
+classes = [0, 0, 1, 0, 0, 1, 1, 0, 1, 1]
 
-def main():
-    transactions = [
-        ["milk", "bread", "eggs"],
-        ["bread", "butter"],
-        ["milk", "bread", "butter", "eggs"],
-        ["bread", "eggs"],
-        ["milk", "eggs"],
-    ]
+data = list(zip(x, y))
+print(data)
 
-    te = TransactionEncoder()
-    te_ary = te.fit(transactions).transform(transactions)
-    df = pd.DataFrame(te_ary, columns=te.columns_)
+knn = KNeighborsClassifier(n_neighbors=1)
+knn.fit(data, classes)
+new_x = 8
+new_y = 21
+new_point = [(new_x, new_y)]
+prediction = knn.predict(new_point)
+print(prediction)
 
-    frequent_itemsets = apriori(df, min_support=0.6, use_colnames=True)
-    # Get the number of itemsets
-    num_itemsets = len(frequent_itemsets)  
-    # Pass num_itemsets to association_rules
-    rules = association_rules(frequent_itemsets, num_itemsets=num_itemsets, metric="confidence", min_threshold=0.7)  
-
-    print("Frequent Itemsets:\n", frequent_itemsets)
-    print("\nAssociation Rules:\n", rules)
-
-
-if __name__ == "__main__":
-    main()
+plt.scatter(x + [new_x], y + [new_y], c=classes + [prediction[0]])
+plt.text(x=new_x - 1.7, y=new_y - 0.7, s=f"new point, class: {prediction[0]}")
+plt.show()
