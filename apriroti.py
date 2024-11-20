@@ -17,7 +17,10 @@ def main():
     df = pd.DataFrame(te_ary, columns=te.columns_)
 
     frequent_itemsets = apriori(df, min_support=0.6, use_colnames=True)
-    rules = association_rules(frequent_itemsets, metric="confidence", min_threshold=0.7)
+    # Get the number of itemsets
+    num_itemsets = len(frequent_itemsets)  
+    # Pass num_itemsets to association_rules
+    rules = association_rules(frequent_itemsets, num_itemsets=num_itemsets, metric="confidence", min_threshold=0.7)  
 
     print("Frequent Itemsets:\n", frequent_itemsets)
     print("\nAssociation Rules:\n", rules)
